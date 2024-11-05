@@ -11,17 +11,9 @@ regex_entry = re.compile(
     r"(?P<module>\S+)\s+(?P<ro_code>[\d\']+)?\s+(?P<ro_data>[\d\']+)?\s+(?P<rw_data>[\d\']+)?"
 )
 
-# Tracks total usage of rom/ram
-total_ro_code = 0
-total_ro_data = 0
-total_rw_data = 0
-
 
 class CodeModule:
-    name = ""
-    ro_code = 0  # all data is measured in bytes
-    ro_data = 0
-    rw_data = 0
+    __slots__ = ["name", "ro_code", "ro_data", "rw_data"]
 
     def __init__(self, name, ro_code, ro_data, rw_data):
         self.name = name
@@ -43,9 +35,13 @@ class MemorySections(Enum):
     END = 3
 
 
+# globals
 map_section = MapSections.INIT
 memory_section = MemorySections.RO_CODE
 code_modules = []
+total_ro_code = 0
+total_ro_data = 0
+total_rw_data = 0
 
 
 def calcPercentage(n, d):  # prevents division by 0
